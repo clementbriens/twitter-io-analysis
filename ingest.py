@@ -43,26 +43,24 @@ class TwitterIngest():
                         if len(index) < 3:
                             index.append(t)
                 if 'user' in file:
-                    type = 'user'
+                    type = 'users'
                 else:
                     type = 'tweets'
                 index_name = 'twitter-io-{}-{}-{}'.format(type, '_'.join(index), year)
 
                 for index, row in df.iterrows():
                     id = self.hash_string("{}:{}".format(file, index))
+                    if row['follower_count'] == ' ':
+                        row['follower_count'] = None
+                    else:
+                        row['follower_count'] = int(row['follower_count'])
                     self.es.index(index_name, id = id, body = dict(row))
                     print(index_name, index, '/', len(df), end = '\r')
                 print('\n')
 
-
-
                 #
                 # except:
                 #     pass
-
-
-
-
 
 #
 if __name__ == '__main__':
