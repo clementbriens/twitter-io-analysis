@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import hashlib
 from utils.ingest_tools import *
+import dateparser
 
 class TwitterIngest():
 
@@ -51,11 +52,13 @@ class TwitterIngest():
                 for index, row in df.iterrows():
                     id = self.hash_string("{}:{}".format(file, index))
                     for key in row.keys():
-                        if 'count' in key:
+                        if 'count' in key and 'date' not in key and 'account' not in key:
                             if row[key] == ' ':
                                 row[key] = None
                             else:
                                 row[key] = int(row[key])
+                        if 'date' in key:
+                            row[key] = dateparser.parse(row[key])
                     self.es.index(index_name, id = id, body = dict(row))
                     print(index_name, index, '/', len(df), end = '\r')
                 print('\n')

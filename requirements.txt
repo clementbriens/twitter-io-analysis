@@ -3,6 +3,7 @@ argon2-cffi-bindings==21.2.0
 async-generator==1.10
 attrs==21.4.0
 backcall==0.2.0
+backports.zoneinfo==0.2.1
 bleach==4.1.0
 certifi==2021.10.8
 cffi==1.15.0
@@ -10,6 +11,7 @@ charset-normalizer==2.0.12
 configparser==5.2.0
 cycler==0.11.0
 dataclasses==0.8
+dateparser==1.1.0
 decorator==5.1.1
 defusedxml==0.7.1
 elastic-transport==8.0.1
@@ -17,6 +19,7 @@ elasticsearch==7.16.3
 entrypoints==0.4
 idna==3.3
 importlib-metadata==4.8.3
+importlib-resources==5.4.0
 ipykernel==5.5.6
 ipython==7.16.3
 ipython-genutils==0.2.0
@@ -57,9 +60,11 @@ pyparsing==3.0.7
 pyrsistent==0.18.0
 python-dateutil==2.8.2
 pytz==2021.3
+pytz-deprecation-shim==0.1.0.post0
 pyzmq==22.3.0
 qtconsole==5.2.2
 QtPy==2.0.1
+regex==2022.1.18
 requests==2.27.1
 scipy==1.5.4
 seaborn==0.11.2
@@ -71,6 +76,8 @@ tornado==6.1
 tqdm==4.62.3
 traitlets==4.3.3
 typing_extensions==4.1.1
+tzdata==2021.5
+tzlocal==4.1
 urllib3==1.26.8
 wcwidth==0.2.5
 webencodings==0.5.1
