@@ -42,7 +42,10 @@ class TwitterIngest():
                     else:
                         if len(index) < 3:
                             index.append(t)
-                type = file.split('_')[-3]
+                if 'user' in file:
+                    type = 'user'
+                else:
+                    type = 'tweets'
                 index_name = 'twitter-io-{}-{}-{}'.format(type, '_'.join(index), year)
 
                 for index, row in df.iterrows():
