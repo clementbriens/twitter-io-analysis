@@ -5,6 +5,7 @@ import os
 import hashlib
 from utils.ingest_tools import *
 import dateparser
+import numpy as np
 
 class TwitterIngest():
 
@@ -27,7 +28,7 @@ class TwitterIngest():
             if file.endswith('.csv'):
                 # try:
 
-                df = pd.read_csv('data/' + file).fillna(" ")
+                df = pd.read_csv('data/' + file).fillna(np.nan).replace([np.nan], [None])
                 #preprocessing for booleans
                 d = {True: 'TRUE', False: 'FALSE'}
                 for col in df:
@@ -48,19 +49,27 @@ class TwitterIngest():
                 else:
                     type = 'tweets'
                 index_name = 'twitter-io-{}-{}-{}'.format(type, '_'.join(index), year)
-
+                failed = 0
                 for index, row in df.iterrows():
                     id = self.hash_string("{}:{}".format(file, index))
                     for key in row.keys():
-                        if ('count' in key or 'id' in 'key') and 'date' not in key and 'account' not in key and "=" not in row[key]:
-                            if row[key] == ' ':
-                                row[key] = None
-                            else:
-                                row[key] = int(row[key])
-                        if 'date' in key or 'time' in key:
-                            row[key] = dateparser.parse(row[key])
-                    self.es.index(index_name, id = id, body = dict(row))
-                    print(index_name, index, '/', len(df), end = '\r')
+                        if row[key]:
+                            if ('count' in key or 'id' in key) and 'date' not in key and 'account' not in key:
+                                if not isinstance(row[key], str):
+                                    if row[key] == ' ':
+                                        row[key] = None
+                                    else:
+                                        row[key] = int(row[key])
+                                else:
+                                    row[key] = None
+                            if 'date' in key or 'time' in key:
+                                row[key] = dateparser.parse(row[key])
+                    try:
+                        self.es.index(index_name, id = id, body = dict(row))
+                    except:
+                        failed += 1
+                        pass
+                    print(index_name, index, '/', len(df), failed, 'failed', end = '\r')
                 print('\n')
 
                 #
