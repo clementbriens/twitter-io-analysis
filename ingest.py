@@ -50,10 +50,12 @@ class TwitterIngest():
 
                 for index, row in df.iterrows():
                     id = self.hash_string("{}:{}".format(file, index))
-                    if row['follower_count'] == ' ':
-                        row['follower_count'] = None
+                    for key in row.keys():
+                        if 'count' in key:
+                    if row[key] == ' ':
+                        row[key] = None
                     else:
-                        row['follower_count'] = int(row['follower_count'])
+                        row[key] = int(row[key])
                     self.es.index(index_name, id = id, body = dict(row))
                     print(index_name, index, '/', len(df), end = '\r')
                 print('\n')
